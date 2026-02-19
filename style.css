@@ -3,6 +3,15 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
+    transition: transform 0.5s ease-in-out;
+}
+
+body.mirror-mode {
+    transform: scaleX(-1);
+}
+
+body.mirror-mode input {
+    direction: rtl;
 }
 
 body {

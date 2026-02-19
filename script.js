@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
     const resultsSearchInput = document.getElementById('resultsSearchInput');
     const searchBtn = document.getElementById('searchBtn');
+    const luckyBtn = document.getElementById('luckyBtn');
     const responseText = document.getElementById('responseText');
     const traditionalResults = document.getElementById('traditionalResults');
     
@@ -164,6 +165,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Eventi Ricerca
     searchBtn.onclick = performSearch;
+    luckyBtn.onclick = () => {
+        document.body.classList.toggle('mirror-mode');
+    };
+    
     searchInput.onkeypress = (e) => { if (e.key === 'Enter') performSearch(); };
     resultsSearchInput.onkeypress = (e) => { if (e.key === 'Enter') performSearch(); };
 
