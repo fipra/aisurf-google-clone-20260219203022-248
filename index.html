@@ -3,89 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Clone - Ollama Search</title>
+    <title>Google Clone - AI Search</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <header id="mainHeader">
+    <header>
         <nav>
             <a href="#">Gmail</a>
             <a href="#">Immagini</a>
-            <button class="settings-btn" id="openSettings"><span class="material-icons">settings</span></button>
             <button class="grid-btn"><span class="material-icons">apps</span></button>
             <button class="sign-in">Accedi</button>
         </nav>
     </header>
 
-    <!-- API Settings Modal -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <h3>Configurazione Ollama</h3>
-            <p>Inserisci i dettagli del tuo server locale:</p>
-            
-            <label>URL Ollama:</label>
-            <input type="text" id="ollamaUrlInput" placeholder="http://localhost:11434">
-            
-            <label>Seleziona Modello:</label>
-            <div class="model-selector-wrapper">
-                <select id="ollamaModelSelect">
-                    <option value="">Caricamento...</option>
-                </select>
-                <button id="refreshModels" title="Aggiorna lista modelli">
-                    <span class="material-icons">refresh</span>
-                </button>
-            </div>
-
-            <p><small>Assicurati che Ollama sia avviato con <code>OLLAMA_ORIGINS="*"</code></small></p>
-            <div class="modal-actions">
-                <button id="saveSettings">Salva e Chiudi</button>
-                <button id="closeSettings" class="btn-secondary">Annulla</button>
-            </div>
-        </div>
-    </div>
-
     <main id="homeMain">
         <section class="search-container">
-            <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google Logo" class="logo">
+            <div class="logo-container">
+                <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google Logo" class="logo" id="googleLogo">
+                <span class="logo-text-mirror" id="logoTextMirror">elgooG</span>
+            </div>
             
             <div class="search-box">
                 <span class="material-icons search-icon">search</span>
-                <input type="text" id="searchInput" title="Cerca" placeholder="Chiedi a Ollama...">
+                <input type="text" id="searchInput" title="Cerca" placeholder="Cerca con AI...">
+                <div class="search-icons">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Google_Mic_Logo.svg" alt="Voice search">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Google_Lens_-_new_logo.svg" alt="Search by image">
+                </div>
             </div>
 
-            <div class="model-indicator-home">
-                <span class="material-icons">terminal</span>
-                <span id="homeModelName">Ollama (connessione...)</span>
+            <div class="model-indicator-home" id="modelIndicatorHome">
+                <span class="material-icons">smart_toy</span>
+                <span id="modelIndicatorText">gemini-3-flash-preview</span>
+            </div>
+
+            <div class="model-selector">
+                <label for="aiModel">Modello AI:</label>
+                <select id="aiModel">
+                    <option value="ollama">Ollama Locale</option>
+                    <option value="gemini-3-flash-preview" selected>Gemini-3-Flash-Preview</option>
+                    <option value="meno-flash">Meno Flash</option>
+                    <option value="meno-preview">Meno Preview</option>
+                </select>
             </div>
 
             <div class="buttons">
-                <button id="searchBtn">Cerca con Ollama</button>
+                <button id="searchBtn">Cerca con Google</button>
                 <button id="luckyBtn">Mi sento fortunato</button>
+            </div>
+
+            <div class="languages">
+                Offerto da Google in: <a href="#">English</a>
             </div>
         </section>
     </main>
 
-    <section id="resultsSection" class="results-section">
+    <section id="resultsSection" class="results-section hidden">
         <div class="results-header">
             <div class="results-nav">
-                <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="results-logo" id="backToHome">
+                <div class="results-logo-container">
+                    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="results-logo" id="resultsLogo">
+                    <span class="logo-text-mirror-small" id="resultsLogoText">elgooG</span>
+                </div>
                 <div class="results-search-box">
                     <input type="text" id="resultsSearchInput">
                     <span class="material-icons">search</span>
                 </div>
-                <div class="model-badge" id="resultBadge">Ollama</div>
+                <div class="model-badge" id="modelBadge">gemini-3-flash-preview</div>
             </div>
         </div>
         <div class="results-content">
             <div class="ai-response">
                 <div class="model-indicator">
-                    <span class="material-icons">memory</span>
-                    <span id="activeModel">Risposta generata da Ollama</span>
+                    <span class="material-icons">smart_toy</span>
+                    <span id="activeModel">Risposta generata da: gemini-3-flash-preview</span>
                 </div>
-                <div class="response-text" id="responseText">
-                    <!-- La risposta apparirà qui -->
-                </div>
+                <div class="response-text" id="responseText"></div>
             </div>
             <div class="traditional-results" id="traditionalResults"></div>
         </div>
@@ -98,6 +92,7 @@
                 <a href="#">Informazioni</a>
                 <a href="#">Pubblicità</a>
                 <a href="#">Soluzioni aziendali</a>
+                <a href="#">Come funziona la Ricerca</a>
             </div>
             <div class="right-links">
                 <a href="#">Privacy</a>
