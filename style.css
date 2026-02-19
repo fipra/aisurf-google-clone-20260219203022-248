@@ -126,6 +126,24 @@ main {
     cursor: pointer;
 }
 
+/* Model Indicator under search box */
+.model-indicator-home {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.model-indicator-home .material-icons {
+    font-size: 18px;
+}
+
 .model-selector {
     margin-top: 15px;
     display: flex;

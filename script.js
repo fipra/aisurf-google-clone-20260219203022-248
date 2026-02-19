@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiModel = document.getElementById('aiModel');
     const modelBadge = document.getElementById('modelBadge');
     const activeModel = document.getElementById('activeModel');
+    const modelIndicatorText = document.getElementById('modelIndicatorText');
     const responseText = document.getElementById('responseText');
     const traditionalResults = document.getElementById('traditionalResults');
     const mainSection = document.querySelector('main');
@@ -13,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const modelNames = {
         'ollama': 'Ollama Locale',
-        'gemini3': 'Gemini-3',
+        'gemini-3-flash-preview': 'Gemini-3-Flash-Preview',
         'meno-flash': 'Meno Flash',
         'meno-preview': 'Meno Preview'
     };
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
             color: '#667eea',
             description: 'Modello locale eseguito sul tuo dispositivo. Privacy garantita, nessuna connessione internet richiesta.'
         },
-        'gemini3': {
+        'gemini-3-flash-preview': {
             color: '#4285f4',
             description: 'Ultima versione di Gemini con capacità avanzate di ragionamento e multimodalità.'
         },
@@ -42,16 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const modelName = modelNames[selectedModel];
         modelBadge.textContent = modelName;
         activeModel.textContent = `Risposta generata da: ${modelName}`;
+        modelIndicatorText.textContent = selectedModel;
     };
 
     const generateAIResponse = (query, model) => {
         const responses = {
             'ollama': `🔍 **Ricerca locale per: "${query}"**\n\nBasandomi sulla mia conoscenza locale, ecco le informazioni richieste. Questo modello gira completamente sul tuo dispositivo, garantendo massima privacy. I risultati sono generati in tempo reale senza inviare dati a server esterni.`,
-            'gemini3': `🌟 **Gemini-3 ha analizzato: "${query}"**\n\nEcco una risposta completa basata sulla mia capacità di ragionamento avanzato. Posso elaborare testo, immagini e codice per fornirti la migliore risposta possibile. La mia conoscenza è aggiornata e posso connettermi a fonti esterne se necessario.`,
+            'gemini-3-flash-preview': `🌟 **Gemini-3-Flash-Preview ha analizzato: "${query}"**\n\nEcco una risposta completa basata sulla mia capacità di ragionamento avanzato. Posso elaborare testo, immagini e codice per fornirti la migliore risposta possibile. La mia conoscenza è aggiornata e posso connettermi a fonti esterne se necessario.`,
             'meno-flash': `⚡ **Meno Flash risponde a: "${query}"**\n\nRisposta veloce ed efficiente! Sono ottimizzato per fornire informazioni rapide con minimo consumo energetico. Perfetto per ricerche quotidiane che richiedono velocità.`,
             'meno-preview': `🚀 **Meno Preview - Anteprima: "${query}"**\n\nStai utilizzando una versione sperimentale con funzionalità esclusive! Questa versione include capacità di ricerca avanzate e integrazione con servizi beta.`
         };
-        return responses[model] || responses['ollama'];
+        return responses[model] || responses['gemini-3-flash-preview'];
     };
 
     const generateTraditionalResults = (query) => {

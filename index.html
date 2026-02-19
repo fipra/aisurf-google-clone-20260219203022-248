@@ -30,11 +30,16 @@
                 </div>
             </div>
 
+            <div class="model-indicator-home" id="modelIndicatorHome">
+                <span class="material-icons">smart_toy</span>
+                <span id="modelIndicatorText">gemini-3-flash-preview</span>
+            </div>
+
             <div class="model-selector">
                 <label for="aiModel">Modello AI:</label>
                 <select id="aiModel">
                     <option value="ollama">Ollama Locale</option>
-                    <option value="gemini3">Gemini-3</option>
+                    <option value="gemini-3-flash-preview" selected>Gemini-3-Flash-Preview</option>
                     <option value="meno-flash">Meno Flash</option>
                     <option value="meno-preview">Meno Preview</option>
                 </select>
@@ -59,14 +64,14 @@
                     <input type="text" id="resultsSearchInput">
                     <span class="material-icons">search</span>
                 </div>
-                <div class="model-badge" id="modelBadge">Ollama Locale</div>
+                <div class="model-badge" id="modelBadge">gemini-3-flash-preview</div>
             </div>
         </div>
         <div class="results-content">
             <div class="ai-response">
                 <div class="model-indicator">
                     <span class="material-icons">smart_toy</span>
-                    <span id="activeModel">Risposta generata da: Ollama Locale</span>
+                    <span id="activeModel">Risposta generata da: gemini-3-flash-preview</span>
                 </div>
                 <div class="response-text" id="responseText"></div>
             </div>
