@@ -4,12 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchBtn = document.getElementById('searchBtn');
     const responseText = document.getElementById('responseText');
     const traditionalResults = document.getElementById('traditionalResults');
+    
     const settingsModal = document.getElementById('settingsModal');
     const openSettings = document.getElementById('openSettings');
     const saveSettings = document.getElementById('saveSettings');
+    const closeSettings = document.getElementById('closeSettings');
+    const refreshModels = document.getElementById('refreshModels');
     
     const ollamaUrlInput = document.getElementById('ollamaUrlInput');
-    const ollamaModelInput = document.getElementById('ollamaModelInput');
+    const ollamaModelSelect = document.getElementById('ollamaModelSelect');
     const homeModelName = document.getElementById('homeModelName');
     const activeModelLabel = document.getElementById('activeModel');
     const resultBadge = document.getElementById('resultBadge');
@@ -24,17 +27,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultUrl = 'http://localhost:11434';
     const defaultModel = 'llama3';
 
-    // Carica configurazione
-    const updateConfigDisplay = () => {
+    // Funzione per caricare i modelli da Ollama
+    async function fetchOllamaModels(baseUrl) {
+        try {
+            const response = await fetch(`${baseUrl}/api/tags`);
+            if (!response.ok) throw new Error('Fallito recupero modelli');
+            const data = await response.json();
+            return data.models || [];
+        } catch (error) {
+            console.error('Errore fetch models:', error);
+            return null;
+        }
+    }
+
+    // Aggiorna la lista a discesa dei modelli
+    async function updateModelDropdown() {
+        const currentUrl = ollamaUrlInput.value.trim() || defaultUrl;
+        const savedModel = localStorage.getItem('ollama_model') || defaultModel;
+        
+        ollamaModelSelect.innerHTML = '<option value="">Caricamento modelli...</option>';
+        
+        const models = await fetchOllamaModels(currentUrl);
+        
+        if (models && models.length > 0) {
+            ollamaModelSelect.innerHTML = '';
+            models.forEach(m => {
+                const option = document.createElement('option');
+                option.value = m.name;
+                option.textContent = m.name;
+                if (m.name === savedModel) option.selected = true;
+                ollamaModelSelect.appendChild(option);
+            });
+        } else {
+            ollamaModelSelect.innerHTML = `<option value="${savedModel}">${savedModel} (non rilevato)</option>`;
+        }
+    }
+
+    // Carica configurazione iniziale
+    const loadConfig = () => {
         const url = localStorage.getItem('ollama_url') || defaultUrl;
         const model = localStorage.getItem('ollama_model') || defaultModel;
         ollamaUrlInput.value = url;
-        ollamaModelInput.value = model;
-        homeModelName.textContent = `Local AI: ${model}`;
+        homeModelName.textContent = `Modello: ${model}`;
         resultBadge.textContent = model;
     };
 
-    updateConfigDisplay();
+    loadConfig();
 
     async function getAIResponse(query) {
         const url = localStorage.getItem('ollama_url') || defaultUrl;
@@ -57,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return data.response;
         } catch (error) {
             console.error(error);
-            return `❌ Errore Ollama: Non riesco a connettermi a ${url}. Assicurati che Ollama sia attivo e configurato con OLLAMA_ORIGINS="*".`;
+            return `❌ Errore Ollama: Non riesco a connettermi a ${url}. Assicurati che Ollama sia attivo con OLLAMA_ORIGINS="*".`;
         }
     }
 
@@ -92,22 +130,39 @@ document.addEventListener('DOMContentLoaded', () => {
         traditionalResults.innerHTML = '';
 
         const answer = await getAIResponse(query);
-        // Semplice formattazione markdown-like per grassetti
         const formattedAnswer = answer.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         
         responseText.innerHTML = formattedAnswer;
         traditionalResults.innerHTML = generateTraditionalResults(query);
     };
 
-    openSettings.onclick = () => settingsModal.style.display = 'block';
+    // Eventi Modal
+    openSettings.onclick = () => {
+        settingsModal.style.display = 'block';
+        updateModelDropdown();
+    };
+    
+    closeSettings.onclick = () => settingsModal.style.display = 'none';
+    
+    refreshModels.onclick = (e) => {
+        e.preventDefault();
+        updateModelDropdown();
+    };
+
     saveSettings.onclick = () => {
-        localStorage.setItem('ollama_url', ollamaUrlInput.value.trim() || defaultUrl);
-        localStorage.setItem('ollama_model', ollamaModelInput.value.trim() || defaultModel);
-        updateConfigDisplay();
+        const selectedModel = ollamaModelSelect.value;
+        const url = ollamaUrlInput.value.trim() || defaultUrl;
+        
+        localStorage.setItem('ollama_url', url);
+        if (selectedModel) localStorage.setItem('ollama_model', selectedModel);
+        
+        loadConfig();
         settingsModal.style.display = 'none';
     };
+
     window.onclick = (e) => { if(e.target == settingsModal) settingsModal.style.display = 'none'; };
 
+    // Eventi Ricerca
     searchBtn.onclick = performSearch;
     searchInput.onkeypress = (e) => { if (e.key === 'Enter') performSearch(); };
     resultsSearchInput.onkeypress = (e) => { if (e.key === 'Enter') performSearch(); };

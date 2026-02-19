@@ -23,12 +23,25 @@
         <div class="modal-content">
             <h3>Configurazione Ollama</h3>
             <p>Inserisci i dettagli del tuo server locale:</p>
+            
             <label>URL Ollama:</label>
             <input type="text" id="ollamaUrlInput" placeholder="http://localhost:11434">
-            <label>Modello:</label>
-            <input type="text" id="ollamaModelInput" placeholder="es. llama3, mistral...">
+            
+            <label>Seleziona Modello:</label>
+            <div class="model-selector-wrapper">
+                <select id="ollamaModelSelect">
+                    <option value="">Caricamento...</option>
+                </select>
+                <button id="refreshModels" title="Aggiorna lista modelli">
+                    <span class="material-icons">refresh</span>
+                </button>
+            </div>
+
             <p><small>Assicurati che Ollama sia avviato con <code>OLLAMA_ORIGINS="*"</code></small></p>
-            <button id="saveSettings">Salva e Chiudi</button>
+            <div class="modal-actions">
+                <button id="saveSettings">Salva e Chiudi</button>
+                <button id="closeSettings" class="btn-secondary">Annulla</button>
+            </div>
         </div>
     </div>
 
@@ -43,7 +56,7 @@
 
             <div class="model-indicator-home">
                 <span class="material-icons">terminal</span>
-                <span id="homeModelName">Ollama (offline)</span>
+                <span id="homeModelName">Ollama (connessione...)</span>
             </div>
 
             <div class="buttons">
