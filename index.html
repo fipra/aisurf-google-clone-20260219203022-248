@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Clone - AI Search</title>
+    <title>Google Clone - Ollama Search</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -21,10 +21,13 @@
     <!-- API Settings Modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
-            <h3>Configurazione AI</h3>
-            <p>Inserisci la tua API Key di Google Gemini per risposte reali:</p>
-            <input type="password" id="apiKeyInput" placeholder="Inserisci API Key...">
-            <p><small>Ottienila gratis su <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a></small></p>
+            <h3>Configurazione Ollama</h3>
+            <p>Inserisci i dettagli del tuo server locale:</p>
+            <label>URL Ollama:</label>
+            <input type="text" id="ollamaUrlInput" placeholder="http://localhost:11434">
+            <label>Modello:</label>
+            <input type="text" id="ollamaModelInput" placeholder="es. llama3, mistral...">
+            <p><small>Assicurati che Ollama sia avviato con <code>OLLAMA_ORIGINS="*"</code></small></p>
             <button id="saveSettings">Salva e Chiudi</button>
         </div>
     </div>
@@ -35,16 +38,16 @@
             
             <div class="search-box">
                 <span class="material-icons search-icon">search</span>
-                <input type="text" id="searchInput" title="Cerca" placeholder="Fai una domanda vera...">
+                <input type="text" id="searchInput" title="Cerca" placeholder="Chiedi a Ollama...">
             </div>
 
             <div class="model-indicator-home">
-                <span class="material-icons">auto_awesome</span>
-                <span>gemini-3-flash-preview</span>
+                <span class="material-icons">terminal</span>
+                <span id="homeModelName">Ollama (offline)</span>
             </div>
 
             <div class="buttons">
-                <button id="searchBtn">Cerca con AI</button>
+                <button id="searchBtn">Cerca con Ollama</button>
                 <button id="luckyBtn">Mi sento fortunato</button>
             </div>
         </section>
@@ -58,14 +61,14 @@
                     <input type="text" id="resultsSearchInput">
                     <span class="material-icons">search</span>
                 </div>
-                <div class="model-badge">gemini-3-flash-preview</div>
+                <div class="model-badge" id="resultBadge">Ollama</div>
             </div>
         </div>
         <div class="results-content">
             <div class="ai-response">
                 <div class="model-indicator">
-                    <span class="material-icons">smart_toy</span>
-                    <span id="activeModel">Risposta generata da GEMINI-3-FLASH-PREVIEW</span>
+                    <span class="material-icons">memory</span>
+                    <span id="activeModel">Risposta generata da Ollama</span>
                 </div>
                 <div class="response-text" id="responseText">
                     <!-- La risposta apparirà qui -->

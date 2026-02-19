@@ -7,50 +7,67 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingsModal = document.getElementById('settingsModal');
     const openSettings = document.getElementById('openSettings');
     const saveSettings = document.getElementById('saveSettings');
-    const apiKeyInput = document.getElementById('apiKeyInput');
     
+    const ollamaUrlInput = document.getElementById('ollamaUrlInput');
+    const ollamaModelInput = document.getElementById('ollamaModelInput');
+    const homeModelName = document.getElementById('homeModelName');
+    const activeModelLabel = document.getElementById('activeModel');
+    const resultBadge = document.getElementById('resultBadge');
+
     const homeMain = document.getElementById('homeMain');
     const mainHeader = document.getElementById('mainHeader');
     const mainFooter = document.getElementById('mainFooter');
     const resultsSection = document.getElementById('resultsSection');
     const backToHome = document.getElementById('backToHome');
 
-    const MODEL_ID = 'gemini-3-flash-preview';
+    // Defaults
+    const defaultUrl = 'http://localhost:11434';
+    const defaultModel = 'llama3';
 
-    apiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
+    // Carica configurazione
+    const updateConfigDisplay = () => {
+        const url = localStorage.getItem('ollama_url') || defaultUrl;
+        const model = localStorage.getItem('ollama_model') || defaultModel;
+        ollamaUrlInput.value = url;
+        ollamaModelInput.value = model;
+        homeModelName.textContent = `Local AI: ${model}`;
+        resultBadge.textContent = model;
+    };
 
-    async function getAIResponse(query, apiKey) {
-        if (!apiKey) return "⚠️ Errore: Inserisci la tua API Key nelle impostazioni per utilizzare il modello Gemini.";
-        
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent?key=${apiKey}`;
+    updateConfigDisplay();
+
+    async function getAIResponse(query) {
+        const url = localStorage.getItem('ollama_url') || defaultUrl;
+        const model = localStorage.getItem('ollama_model') || defaultModel;
         
         try {
-            const response = await fetch(endpoint, {
+            const response = await fetch(`${url}/api/generate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: query }] }]
+                    model: model,
+                    prompt: query,
+                    stream: false
                 })
             });
             
-            const data = await response.json();
-            if (data.error) throw new Error(data.error.message);
-            if (!data.candidates || data.candidates.length === 0) return "Nessuna risposta generata.";
+            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
             
-            return data.candidates[0].content.parts[0].text;
+            const data = await response.json();
+            return data.response;
         } catch (error) {
             console.error(error);
-            return `❌ Errore API (${MODEL_ID}): ${error.message}.`;
+            return `❌ Errore Ollama: Non riesco a connettermi a ${url}. Assicurati che Ollama sia attivo e configurato con OLLAMA_ORIGINS="*".`;
         }
     }
 
     const generateTraditionalResults = (query) => {
-        const sites = ['wikipedia.org', 'repubblica.it', 'aranzulla.it', 'ilpost.it'];
+        const sites = ['wikipedia.org', 'github.com', 'stackoverflow.com', 'reddit.com'];
         return [1, 2, 3].map(i => `
             <div class="result-item">
                 <div class="result-url">https://www.${sites[i % sites.length]}/search?q=${encodeURIComponent(query)}</div>
-                <a href="#" class="result-title">${query} - Risultato correlato ${i}</a>
-                <div class="result-description">Approfondimento su <strong>${query}</strong> tramite fonti verificate. Ultime notizie e dati aggiornati.</div>
+                <a href="#" class="result-title">${query} - Risorsa locale ${i}</a>
+                <div class="result-description">Risultato sintetico per <strong>${query}</strong> generato dal sistema di ricerca integrato.</div>
             </div>
         `).join('');
     };
@@ -62,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!query) return;
 
-        const apiKey = localStorage.getItem('gemini_api_key');
+        const model = localStorage.getItem('ollama_model') || defaultModel;
 
         homeMain.classList.add('hidden');
         mainHeader.classList.add('hidden');
@@ -70,10 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsSection.classList.add('active');
         resultsSearchInput.value = query;
 
-        responseText.innerHTML = '<span class="loading-dots">Elaborazione in corso con Gemini 3</span>';
+        activeModelLabel.innerHTML = `<span class="material-icons">memory</span> Generazione in corso con ${model}...`;
+        responseText.innerHTML = '<span class="loading-dots">Ollama sta elaborando</span>';
         traditionalResults.innerHTML = '';
 
-        const answer = await getAIResponse(query, apiKey);
+        const answer = await getAIResponse(query);
+        // Semplice formattazione markdown-like per grassetti
         const formattedAnswer = answer.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         
         responseText.innerHTML = formattedAnswer;
@@ -82,7 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     openSettings.onclick = () => settingsModal.style.display = 'block';
     saveSettings.onclick = () => {
-        localStorage.setItem('gemini_api_key', apiKeyInput.value.trim());
+        localStorage.setItem('ollama_url', ollamaUrlInput.value.trim() || defaultUrl);
+        localStorage.setItem('ollama_model', ollamaModelInput.value.trim() || defaultModel);
+        updateConfigDisplay();
         settingsModal.style.display = 'none';
     };
     window.onclick = (e) => { if(e.target == settingsModal) settingsModal.style.display = 'none'; };
