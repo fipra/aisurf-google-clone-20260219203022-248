@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <header>
+    <header id="mainHeader">
         <nav>
             <a href="#">Gmail</a>
             <a href="#">Immagini</a>
@@ -17,17 +17,13 @@
         </nav>
     </header>
 
-    <main>
+    <main id="homeMain">
         <section class="search-container">
             <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google Logo" class="logo">
             
             <div class="search-box">
                 <span class="material-icons search-icon">search</span>
                 <input type="text" id="searchInput" title="Cerca" placeholder="Cerca con AI...">
-                <div class="search-icons">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Google_Mic_Logo.svg" alt="Voice search">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Google_Lens_-_new_logo.svg" alt="Search by image">
-                </div>
             </div>
 
             <div class="model-indicator-home" id="modelIndicatorHome">
@@ -56,10 +52,10 @@
         </section>
     </main>
 
-    <section id="resultsSection" class="results-section hidden">
+    <section id="resultsSection" class="results-section">
         <div class="results-header">
             <div class="results-nav">
-                <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="results-logo">
+                <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="results-logo" id="backToHome">
                 <div class="results-search-box">
                     <input type="text" id="resultsSearchInput">
                     <span class="material-icons">search</span>
@@ -79,7 +75,7 @@
         </div>
     </section>
 
-    <footer>
+    <footer id="mainFooter">
         <div class="location">Italia</div>
         <div class="footer-links">
             <div class="left-links">

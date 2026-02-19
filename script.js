@@ -8,34 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const modelIndicatorText = document.getElementById('modelIndicatorText');
     const responseText = document.getElementById('responseText');
     const traditionalResults = document.getElementById('traditionalResults');
-    const mainSection = document.querySelector('main');
+    
+    const homeMain = document.getElementById('homeMain');
+    const mainHeader = document.getElementById('mainHeader');
+    const mainFooter = document.getElementById('mainFooter');
     const resultsSection = document.getElementById('resultsSection');
-    const footer = document.querySelector('footer');
+    const backToHome = document.getElementById('backToHome');
 
     const modelNames = {
         'ollama': 'Ollama Locale',
         'gemini-3-flash-preview': 'Gemini-3-Flash-Preview',
         'meno-flash': 'Meno Flash',
         'meno-preview': 'Meno Preview'
-    };
-
-    const modelResponses = {
-        'ollama': {
-            color: '#667eea',
-            description: 'Modello locale eseguito sul tuo dispositivo. Privacy garantita, nessuna connessione internet richiesta.'
-        },
-        'gemini-3-flash-preview': {
-            color: '#4285f4',
-            description: 'Ultima versione di Gemini con capacità avanzate di ragionamento e multimodalità.'
-        },
-        'meno-flash': {
-            color: '#ea4335',
-            description: 'Versione ottimizzata per velocità e efficienza energetica.'
-        },
-        'meno-preview': {
-            color: '#34a853',
-            description: 'Versione sperimentale con funzionalità anteprima e accesso anticipato.'
-        }
     };
 
     const updateModelDisplay = () => {
@@ -59,17 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateTraditionalResults = (query) => {
         const results = [
             {
-                url: `https://www.example.com/${query.replace(/\s+/g, '-')}`,
+                url: `https://www.example.com/${encodeURIComponent(query)}`,
                 title: `${query} - Informazioni Complete`,
                 description: `Trova tutte le informazioni su ${query}. Guide, tutorial e risorse aggiornate per approfondire l'argomento.`
             },
             {
-                url: `https://www.wikipedia.org/wiki/${query.replace(/\s+/g, '_')}`,
+                url: `https://www.wikipedia.org/wiki/${encodeURIComponent(query)}`,
                 title: `${query} - Wikipedia`,
                 description: `Voce enciclopedica su ${query}. Storia, caratteristiche e informazioni verificate dalla community.`
             },
             {
-                url: `https://www.news.com/search/${query.replace(/\s+/g, '-')}`,
+                url: `https://www.news.com/search/${encodeURIComponent(query)}`,
                 title: `Ultime notizie su ${query}`,
                 description: `Notizie recenti e aggiornamenti in tempo reale riguardanti ${query}. Fonti affidabili e verificate.`
             }
@@ -84,53 +68,56 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     };
 
-    const performSearch = () => {
-        const query = searchInput.value.trim() || resultsSearchInput.value.trim();
+    const performSearch = (event) => {
+        const query = (resultsSection.classList.contains('active')) 
+            ? resultsSearchInput.value.trim() 
+            : searchInput.value.trim();
+
         if (!query) return;
 
         const selectedModel = aiModel.value;
         updateModelDisplay();
 
-        // Show loading state
+        // Prepare results view
         responseText.innerHTML = '<div class="loading">Generazione risposta in corso...</div>';
+        traditionalResults.innerHTML = '';
         
+        // Transition visibility
+        homeMain.classList.add('hidden');
+        mainHeader.classList.add('hidden');
+        mainFooter.classList.add('hidden');
+        resultsSection.classList.add('active');
+        resultsSearchInput.value = query;
+
         // Simulate AI response delay
         setTimeout(() => {
             const aiResponse = generateAIResponse(query, selectedModel);
             responseText.innerHTML = aiResponse.replace(/\n/g, '<br>');
             traditionalResults.innerHTML = generateTraditionalResults(query);
-
-            // Switch to results view
-            mainSection.classList.add('hidden');
-            footer.classList.add('hidden');
-            resultsSection.classList.add('active');
-            resultsSearchInput.value = query;
-        }, 800);
+        }, 600);
     };
 
     // Event Listeners
     searchBtn.addEventListener('click', performSearch);
 
     searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            performSearch();
-        }
+        if (e.key === 'Enter') performSearch();
     });
 
     resultsSearchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            performSearch();
-        }
+        if (e.key === 'Enter') performSearch();
     });
 
     aiModel.addEventListener('change', updateModelDisplay);
 
     // Return to home
-    document.querySelector('.results-logo').addEventListener('click', () => {
+    backToHome.addEventListener('click', () => {
         resultsSection.classList.remove('active');
-        mainSection.classList.remove('hidden');
-        footer.classList.remove('hidden');
+        homeMain.classList.remove('hidden');
+        mainHeader.classList.remove('hidden');
+        mainFooter.classList.remove('hidden');
         searchInput.value = '';
+        resultsSearchInput.value = '';
     });
 
     // Initialize
