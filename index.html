@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Clone</title>
+    <title>Google Clone - AI Search</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -23,15 +23,25 @@
             
             <div class="search-box">
                 <span class="material-icons search-icon">search</span>
-                <input type="text" title="Cerca">
+                <input type="text" id="searchInput" title="Cerca" placeholder="Cerca con AI...">
                 <div class="search-icons">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Google_Mic_Logo.svg" alt="Voice search">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Google_Lens_-_new_logo.svg" alt="Search by image">
                 </div>
             </div>
 
+            <div class="model-selector">
+                <label for="aiModel">Modello AI:</label>
+                <select id="aiModel">
+                    <option value="ollama">Ollama Locale</option>
+                    <option value="gemini3">Gemini-3</option>
+                    <option value="meno-flash">Meno Flash</option>
+                    <option value="meno-preview">Meno Preview</option>
+                </select>
+            </div>
+
             <div class="buttons">
-                <button>Cerca con Google</button>
+                <button id="searchBtn">Cerca con Google</button>
                 <button>Mi sento fortunato</button>
             </div>
 
@@ -40,6 +50,29 @@
             </div>
         </section>
     </main>
+
+    <section id="resultsSection" class="results-section hidden">
+        <div class="results-header">
+            <div class="results-nav">
+                <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="results-logo">
+                <div class="results-search-box">
+                    <input type="text" id="resultsSearchInput">
+                    <span class="material-icons">search</span>
+                </div>
+                <div class="model-badge" id="modelBadge">Ollama Locale</div>
+            </div>
+        </div>
+        <div class="results-content">
+            <div class="ai-response">
+                <div class="model-indicator">
+                    <span class="material-icons">smart_toy</span>
+                    <span id="activeModel">Risposta generata da: Ollama Locale</span>
+                </div>
+                <div class="response-text" id="responseText"></div>
+            </div>
+            <div class="traditional-results" id="traditionalResults"></div>
+        </div>
+    </section>
 
     <footer>
         <div class="location">Italia</div>
@@ -57,5 +90,7 @@
             </div>
         </div>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
