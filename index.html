@@ -12,10 +12,22 @@
         <nav>
             <a href="#">Gmail</a>
             <a href="#">Immagini</a>
+            <button class="settings-btn" id="openSettings"><span class="material-icons">settings</span></button>
             <button class="grid-btn"><span class="material-icons">apps</span></button>
             <button class="sign-in">Accedi</button>
         </nav>
     </header>
+
+    <!-- API Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h3>Configurazione AI</h3>
+            <p>Inserisci la tua API Key di Google Gemini per risposte reali:</p>
+            <input type="password" id="apiKeyInput" placeholder="Inserisci API Key...">
+            <p><small>Ottienila gratis su <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a></small></p>
+            <button id="saveSettings">Salva e Chiudi</button>
+        </div>
+    </div>
 
     <main id="homeMain">
         <section class="search-container">
@@ -23,31 +35,26 @@
             
             <div class="search-box">
                 <span class="material-icons search-icon">search</span>
-                <input type="text" id="searchInput" title="Cerca" placeholder="Cerca con AI...">
+                <input type="text" id="searchInput" title="Cerca" placeholder="Fai una domanda vera...">
             </div>
 
             <div class="model-indicator-home" id="modelIndicatorHome">
-                <span class="material-icons">smart_toy</span>
-                <span id="modelIndicatorText">gemini-3-flash-preview</span>
+                <span class="material-icons">auto_awesome</span>
+                <span id="modelIndicatorText">gemini-1.5-flash</span>
             </div>
 
             <div class="model-selector">
-                <label for="aiModel">Modello AI:</label>
+                <label for="aiModel">Modello:</label>
                 <select id="aiModel">
-                    <option value="ollama">Ollama Locale</option>
-                    <option value="gemini-3-flash-preview" selected>Gemini-3-Flash-Preview</option>
-                    <option value="meno-flash">Meno Flash</option>
-                    <option value="meno-preview">Meno Preview</option>
+                    <option value="gemini-1.5-flash" selected>Gemini 1.5 Flash (Veloce)</option>
+                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Avanzato)</option>
+                    <option value="ollama">Ollama (Locale)</option>
                 </select>
             </div>
 
             <div class="buttons">
-                <button id="searchBtn">Cerca con Google</button>
-                <button>Mi sento fortunato</button>
-            </div>
-
-            <div class="languages">
-                Offerto da Google in: <a href="#">English</a>
+                <button id="searchBtn">Cerca con AI</button>
+                <button id="luckyBtn">Mi sento fortunato</button>
             </div>
         </section>
     </main>
@@ -60,16 +67,18 @@
                     <input type="text" id="resultsSearchInput">
                     <span class="material-icons">search</span>
                 </div>
-                <div class="model-badge" id="modelBadge">gemini-3-flash-preview</div>
+                <div class="model-badge" id="modelBadge">gemini-1.5-flash</div>
             </div>
         </div>
         <div class="results-content">
             <div class="ai-response">
                 <div class="model-indicator">
                     <span class="material-icons">smart_toy</span>
-                    <span id="activeModel">Risposta generata da: gemini-3-flash-preview</span>
+                    <span id="activeModel">Risposta generata da Gemini</span>
                 </div>
-                <div class="response-text" id="responseText"></div>
+                <div class="response-text" id="responseText">
+                    <!-- La risposta apparirà qui -->
+                </div>
             </div>
             <div class="traditional-results" id="traditionalResults"></div>
         </div>
@@ -82,7 +91,6 @@
                 <a href="#">Informazioni</a>
                 <a href="#">Pubblicità</a>
                 <a href="#">Soluzioni aziendali</a>
-                <a href="#">Come funziona la Ricerca</a>
             </div>
             <div class="right-links">
                 <a href="#">Privacy</a>
